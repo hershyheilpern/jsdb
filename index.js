@@ -1,6 +1,5 @@
 const { Pool } = require("pg");
-// var cl = console.log;
-var { cl } = require("../log")
+var cl = console.log;
 
 var db = {
     DBclass: class {
