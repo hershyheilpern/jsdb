@@ -68,7 +68,7 @@ var db = {
                 sql: `UPDATE $$.${obj.table} 
                 SET ${set.join()}
                 WHERE ${where.join()};`,
-                values: Object.assign(obj.cols, obj.where);
+                values: Object.assign(obj.cols, obj.where)
             }
             this.query(qry,cb)
         }
