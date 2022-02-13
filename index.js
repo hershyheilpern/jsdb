@@ -60,6 +60,25 @@ var db = {
             }
             this.query(qry,cb)
         }
+        update(obj,cb) {
+            let set = this.obj_to_sql(obj.cols)
+            
+            let where = this.obj_to_sql(obj.where)
+            let qry = {
+                sql: `UPDATE $$.${obj.table} 
+                SET ${set.join()}
+                WHERE ${where.join()};`,
+                values: Object.assign(obj.cols, obj.where);
+            }
+            this.query(qry,cb)
+        }
+        obj_to_sql(obj){
+            let where = []
+            Object.keys(obj).map((v)=>{
+                where.push(`${v}=$${v}`)
+            })
+            return where
+        }
     
     },
     init: function (name, a) {
