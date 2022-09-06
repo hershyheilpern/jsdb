@@ -7,8 +7,59 @@ var db = {
             this.pool = new Pool(config)
             this.schema = config.schema
         }
+        build(sql, values, cb,cb2){
+            if (typeof sql == 'object') {
+                cb = values
+                values = sql.values
+                sql = sql.sql
+            }
+            try {
+                sql = sql.replace(/\$\$/g, this.schema)
+            } catch (error) {
+                cl(error)
+                cl(sql)
+            }
 
-        query(sql, values, cb) {
+
+            if (typeof values == 'object') {
+                if (!Array.isArray(values)) {
+                    let list = Object.keys(values)
+                    let ary = []
+                    list.map((v, i) => {
+                        let number = i + 1
+                        let regex1 = new RegExp("\\$" + v + ",", "g");
+                        let regex2 = new RegExp("\\$" + v + "(\\s|$|;)", "g");
+                        let regex3 = new RegExp("\\$" + v + "\\)", "g");
+                        let replace1 = "$$" + (number) + ",";
+                        let replace2 = "$$" + (number) + " "
+                        let replace3 = "$$" + (number) + ")";
+                        sql = sql.replace(regex3, replace3)
+                        sql = sql.replace(regex2, replace2)
+                        sql = sql.replace(regex1, replace1)
+                        ary.push(values[v])
+                    })
+                    values = ary
+                    cl(5,"gyfjutgyufutytyfi", sql, values)
+                }
+                if (!sql.includes("system")) {
+                }
+                cb2(sql, values, cb)
+            } else {
+                cb = values
+                cb2(sql, cb)
+            }
+        }
+        query(sql, values, cb,) {
+            this.build(sql, values, cb,this.pool.query)
+        }
+        verify(sql, values, cb,) {
+            this.build(sql, values, cb,(...props)=>{
+                props[0] = `BEGIN;
+                ${props[0]}
+                ROLLBACK;`
+            })
+        }
+        xquery(sql, values, cb) {
             if (typeof sql == 'object') {
                 cb = values
                 values = sql.values
