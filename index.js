@@ -11,7 +11,7 @@ var db = {
             if (typeof sql == 'object') {
                 cb = values
                 values = sql.values
-                sql = sql.sql
+                sql = sql.sql || sql.qry
             }
             try {
                 sql = sql.replace(/\$\$/g, this.schema)

@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/hershyheilpern/jsdb/issues"
   },
-  "homepage": "https://github.com/hershyheilpern/jsdb#readme"
+  "homepage": "https://github.com/hershyheilpern/jsdb#readme",
+  "dependencies": {
+    "pg": "^8.12.0"
+  }
 }
